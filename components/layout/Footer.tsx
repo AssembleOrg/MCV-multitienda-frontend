@@ -12,24 +12,22 @@ const socialLinks = [
 
 export default function Footer() {
   return (
-    <footer className="bg-[#1a1a1a] py-10 relative">
+    <footer className="relative bg-[#1a1a1a] py-10">
       {/* Neon wave - onda que viaja */}
-      <div className="absolute top-0 left-0 right-0 neon-wave-sm" />
+      <div className="neon-wave-sm absolute top-0 right-0 left-0" />
 
       <Container size="xl">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-4">
           {/* Brand */}
           <div>
             <Image
-              src="/MCV-navidad-logo.jpg"
+              src="/logo-sinbg.svg"
               alt="MCV Multitienda"
               width={80}
               height={80}
-              className="rounded-lg mb-4"
+              className="mb-4 rounded-lg"
             />
-            <p className="text-gray-200 text-sm mb-4">
-              Tu tienda online de confianza
-            </p>
+            <p className="mb-4 text-sm text-gray-200">Tu tienda online de confianza</p>
             <Group gap="sm">
               {socialLinks.map((social) => (
                 <a
@@ -37,7 +35,7 @@ export default function Footer() {
                   href={social.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-gray-200 hover:text-[#C41E3A] transition-colors"
+                  className="text-gray-200 transition-colors hover:text-[#C41E3A]"
                   aria-label={social.label}
                 >
                   <social.icon size={20} />
@@ -48,29 +46,23 @@ export default function Footer() {
 
           {/* Tienda */}
           <div>
-            <h3 className="font-semibold text-white text-sm uppercase">
-              Tienda
-            </h3>
+            <h3 className="text-sm font-semibold text-white uppercase">Tienda</h3>
           </div>
 
           {/* Categorías */}
           <div>
-            <h3 className="font-semibold text-white text-sm uppercase">
-              Categorías
-            </h3>
+            <h3 className="text-sm font-semibold text-white uppercase">Categorías</h3>
           </div>
 
           {/* Ayuda */}
           <div>
-            <h3 className="font-semibold text-white text-sm uppercase">
-              Ayuda
-            </h3>
+            <h3 className="text-sm font-semibold text-white uppercase">Ayuda</h3>
           </div>
         </div>
 
         {/* Bottom */}
-        <div className="mt-8 pt-6 border-t border-gray-700">
-          <p className="text-center text-gray-400 text-sm">
+        <div className="mt-8 border-t border-gray-700 pt-6">
+          <p className="text-center text-sm text-gray-400">
             © {new Date().getFullYear()} MCV Multitienda. Todos los derechos reservados.
           </p>
         </div>

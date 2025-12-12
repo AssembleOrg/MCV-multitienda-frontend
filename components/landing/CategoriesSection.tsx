@@ -22,7 +22,7 @@ export default function CategoriesSection() {
           </Title>
         </motion.div>
 
-        <div className="flex flex-wrap items-center justify-center gap-4">
+        <div className="grid grid-cols-2 gap-3 md:flex md:flex-wrap md:justify-center md:gap-4">
           {categories.map((category, index) => (
             <motion.div
               key={category.id}
@@ -34,13 +34,13 @@ export default function CategoriesSection() {
                 type: "spring",
                 stiffness: 200,
               }}
-              whileHover={{ scale: 1.1, y: -5 }}
+              whileHover={{ scale: 1.05, y: -3 }}
               whileTap={{ scale: 0.95 }}
               className="relative"
             >
               <Link
                 href={`/productos?categoria=${category.slug}`}
-                className="relative mt-4 inline-block rounded-lg border-2 border-white/20 bg-gradient-to-r from-[#C41E3A] to-[#9B1830] px-8 py-3 text-sm font-bold tracking-wide shadow-lg transition-all duration-300 hover:from-[#9B1830] hover:to-[#C41E3A]"
+                className="relative block w-full text-center rounded-lg border-2 border-white/20 bg-gradient-to-r from-[#C41E3A] to-[#9B1830] px-4 py-2.5 md:px-8 md:py-3 text-xs md:text-sm font-bold tracking-wide shadow-lg transition-all duration-300 hover:from-[#9B1830] hover:to-[#C41E3A]"
                 style={{ color: "white" }}
               >
                 {category.name.toUpperCase()}

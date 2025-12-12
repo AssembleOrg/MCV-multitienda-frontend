@@ -26,7 +26,7 @@ export default function Navbar() {
             {/* Logo */}
             <Link href="/" className="flex-shrink-0">
               <Image
-                src="/MCV-navidad-logo.jpg"
+                src="/logo-sinbg.svg"
                 alt="MCV Multitienda"
                 width={70}
                 height={70}
@@ -67,7 +67,7 @@ export default function Navbar() {
               </div>
 
               {/* Cart */}
-              <Link href="/carrito">
+              <Link href="/">
                 <div className="flex items-center gap-2 text-gray-700 transition-colors hover:text-red-600">
                   <div className="relative">
                     <ShoppingCart size={22} />
@@ -104,8 +104,8 @@ export default function Navbar() {
         size="xs"
         title={
           <Image
-            src="/MCV-navidad-logo.jpg"
-            alt="MCV"
+            src="/logo-sinbg.svg"
+            alt="MCV logo"
             width={50}
             height={50}
             className="rounded-lg"
@@ -134,14 +134,14 @@ export default function Navbar() {
 
           {/* Auth */}
           <Link
-            href="/login"
+            href="/"
             onClick={closeMobileMenu}
             className="py-2 text-gray-700 transition-colors hover:text-red-600"
           >
             Iniciar sesión
           </Link>
           <Link
-            href="/register"
+            href="/"
             onClick={closeMobileMenu}
             className="py-2 text-gray-700 transition-colors hover:text-red-600"
           >
