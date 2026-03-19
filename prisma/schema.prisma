@@ -1,0 +1,307 @@
+generator client {
+  provider        = "prisma-client"
+  output          = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  schemas  = ["multitienda"]
+}
+
+// ============================================
+// STORE CONFIGURATION
+// ============================================
+model multitienda_store {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  logo        String?
+  favicon     String?
+  phone       String?
+  email       String?
+  address     String?
+  instagram   String?
+  facebook    String?
+  whatsapp    String?
+  tiktok      String?
+  currency    String   @default("ARS")
+  metaTitle   String?  @map("meta_title")
+  metaDesc    String?  @map("meta_description")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@schema("multitienda")
+}
+
+// ============================================
+// CATEGORIES
+// ============================================
+model multitienda_category {
+  id          String   @id @default(cuid())
+  name        String
+  slug        String   @unique
+  description String?
+  icon        String?
+  image       String?
+  sortOrder   Int      @default(0) @map("sort_order")
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  products multitienda_product[]
+
+  @@schema("multitienda")
+}
+
+// ============================================
+// PRODUCTS
+// ============================================
+model multitienda_product {
+  id            String   @id @default(cuid())
+  name          String
+  slug          String   @unique
+  description   String
+  price         Float
+  originalPrice Float?   @map("original_price")
+  stock         Int      @default(0)
+  sku           String   @unique
+  featured      Boolean  @default(false)
+  active        Boolean  @default(true)
+  categoryId    String   @map("category_id")
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  category   multitienda_category        @relation(fields: [categoryId], references: [id])
+  variants   multitienda_product_variant[]
+  images     multitienda_product_image[]
+  orderItems multitienda_order_item[]
+
+  @@index([categoryId])
+  @@index([featured])
+  @@index([active])
+  @@schema("multitienda")
+}
+
+// ============================================
+// PRODUCT VARIANTS
+// ============================================
+model multitienda_product_variant {
+  id            String  @id @default(cuid())
+  name          String
+  type          String  // "size" | "color" | "storage"
+  value         String
+  priceModifier Float?  @default(0) @map("price_modifier")
+  stock         Int     @default(0)
+  productId     String  @map("product_id")
+
+  product    multitienda_product           @relation(fields: [productId], references: [id], onDelete: Cascade)
+  images     multitienda_product_image[]
+  orderItems multitienda_order_item_variant[]
+
+  @@index([productId])
+  @@schema("multitienda")
+}
+
+// ============================================
+// PRODUCT IMAGES
+// ============================================
+model multitienda_product_image {
+  id        String  @id @default(cuid())
+  url       String
+  alt       String?
+  sortOrder Int     @default(0) @map("sort_order")
+  productId String  @map("product_id")
+  variantId String? @map("variant_id")
+
+  product multitienda_product          @relation(fields: [productId], references: [id], onDelete: Cascade)
+  variant multitienda_product_variant? @relation(fields: [variantId], references: [id], onDelete: SetNull)
+
+  @@index([productId])
+  @@schema("multitienda")
+}
+
+// ============================================
+// USERS
+// ============================================
+model multitienda_user {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  name      String
+  lastName  String?  @map("last_name")
+  phone     String?
+  address   String?
+  role      String   @default("customer") // "customer" | "admin"
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  orders    multitienda_order[]
+  auditLogs multitienda_audit_log[]
+
+  @@schema("multitienda")
+}
+
+// ============================================
+// ORDERS
+// ============================================
+model multitienda_order {
+  id              String   @id @default(cuid())
+  userId          String?  @map("user_id")
+  status          String   @default("pending")
+  total           Float
+  subtotal        Float
+  shippingCost    Float    @default(0) @map("shipping_cost")
+  discount        Float    @default(0)
+  campaignId      String?  @map("campaign_id")
+  shippingStreet  String?  @map("shipping_street")
+  shippingCity    String?  @map("shipping_city")
+  shippingState   String?  @map("shipping_state")
+  shippingZip     String?  @map("shipping_zip")
+  shippingCountry String?  @map("shipping_country")
+  contactName     String?  @map("contact_name")
+  contactEmail    String?  @map("contact_email")
+  contactPhone    String?  @map("contact_phone")
+  notes           String?
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  user     multitienda_user?     @relation(fields: [userId], references: [id])
+  campaign multitienda_campaign? @relation(fields: [campaignId], references: [id])
+  items    multitienda_order_item[]
+
+  @@index([userId])
+  @@index([status])
+  @@index([createdAt])
+  @@schema("multitienda")
+}
+
+// ============================================
+// ORDER ITEMS
+// ============================================
+model multitienda_order_item {
+  id        String @id @default(cuid())
+  orderId   String @map("order_id")
+  productId String @map("product_id")
+  quantity  Int
+  price     Float
+
+  order    multitienda_order              @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product  multitienda_product            @relation(fields: [productId], references: [id])
+  variants multitienda_order_item_variant[]
+
+  @@index([orderId])
+  @@schema("multitienda")
+}
+
+// ============================================
+// ORDER ITEM VARIANTS
+// ============================================
+model multitienda_order_item_variant {
+  id          String @id @default(cuid())
+  orderItemId String @map("order_item_id")
+  variantId   String @map("variant_id")
+
+  orderItem multitienda_order_item      @relation(fields: [orderItemId], references: [id], onDelete: Cascade)
+  variant   multitienda_product_variant @relation(fields: [variantId], references: [id])
+
+  @@index([orderItemId])
+  @@schema("multitienda")
+}
+
+// ============================================
+// CAMPAIGNS
+// ============================================
+model multitienda_campaign {
+  id             String    @id @default(cuid())
+  name           String
+  code           String    @unique
+  description    String?
+  type           String    // "percentage" | "fixed"
+  value          Float
+  minPurchase    Float?    @map("min_purchase")
+  maxDiscount    Float?    @map("max_discount")
+  maxUses        Int?      @map("max_uses")
+  maxUsesPerUser Int?      @map("max_uses_per_user")
+  currentUses    Int       @default(0) @map("current_uses")
+  startDate      DateTime  @map("start_date")
+  endDate        DateTime  @map("end_date")
+  active         Boolean   @default(true)
+  categoryIds    String[]  @map("category_ids")
+  productIds     String[]  @map("product_ids")
+  createdAt      DateTime  @default(now()) @map("created_at")
+  updatedAt      DateTime  @updatedAt @map("updated_at")
+
+  orders multitienda_order[]
+  usages multitienda_campaign_usage[]
+
+  @@schema("multitienda")
+}
+
+// ============================================
+// CAMPAIGN USAGE TRACKING
+// ============================================
+model multitienda_campaign_usage {
+  id         String   @id @default(cuid())
+  campaignId String   @map("campaign_id")
+  userId     String?  @map("user_id")
+  orderId    String?  @map("order_id")
+  usedAt     DateTime @default(now()) @map("used_at")
+
+  campaign multitienda_campaign @relation(fields: [campaignId], references: [id])
+
+  @@index([campaignId])
+  @@index([userId])
+  @@schema("multitienda")
+}
+
+// ============================================
+// PROMOS
+// ============================================
+model multitienda_promo {
+  id        String   @id @default(cuid())
+  text      String
+  link      String?
+  active    Boolean  @default(true)
+  sortOrder Int      @default(0) @map("sort_order")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@schema("multitienda")
+}
+
+// ============================================
+// AUDIT LOG (CRM)
+// ============================================
+model multitienda_audit_log {
+  id        String   @id @default(cuid())
+  adminId   String   @map("admin_id")
+  action    String
+  entity    String
+  entityId  String   @map("entity_id")
+  changes   Json?
+  ip        String?
+  createdAt DateTime @default(now()) @map("created_at")
+
+  admin multitienda_user @relation(fields: [adminId], references: [id])
+
+  @@index([adminId])
+  @@index([entity])
+  @@index([createdAt])
+  @@schema("multitienda")
+}
+
+// ============================================
+// WHITELISTED EMAILS (allowed to access the app)
+// ============================================
+model multitienda_whitelisted_email {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  role      String   @default("customer") // "customer" | "admin"
+  note      String?
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@schema("multitienda")
+}

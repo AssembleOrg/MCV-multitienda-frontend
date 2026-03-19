@@ -1,29 +1,62 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { Container, TextInput, ActionIcon, Drawer, Stack, Divider } from "@mantine/core";
+import {
+  Container,
+  TextInput,
+  ActionIcon,
+  Drawer,
+  Stack,
+  Divider,
+} from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { Search, ShoppingCart, Menu, X } from "lucide-react";
+import { Search, ShoppingCart, Menu } from "lucide-react";
+import { useCartStore, useAuthStore } from "@/lib/store";
+import { api } from "@/lib/api-client";
+import { formatPrice } from "@/lib/utils";
 
 const navLinks = [
   { label: "INICIO", href: "/" },
-  { label: "NOSOTROS", href: "/" },
-  { label: "CATÁLOGO", href: "/" },
+  { label: "NOSOTROS", href: "/nosotros" },
+  { label: "CATÁLOGO", href: "/productos" },
 ];
 
 export default function Navbar() {
-  const [mobileMenuOpened, { open: openMobileMenu, close: closeMobileMenu }] = useDisclosure(false);
+  const router = useRouter();
+  const [mobileMenuOpened, { open: openMobileMenu, close: closeMobileMenu }] =
+    useDisclosure(false);
 
-  // Carrito mock - después conectar con Zustand
-  const cartTotal = 0;
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const cartCount = useCartStore((s) => s.getCount());
+  const cartTotal = useCartStore((s) => s.getTotal());
+  const user = useAuthStore((s) => s.user);
+  const setUser = useAuthStore((s) => s.setUser);
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      router.push(`/productos?search=${encodeURIComponent(searchQuery.trim())}`);
+      closeMobileMenu();
+    }
+  };
+
+  const handleLogout = async () => {
+    await api.logout().catch(() => {});
+    setUser(null);
+    closeMobileMenu();
+    router.push("/");
+    router.refresh();
+  };
 
   return (
     <>
       <header className="sticky top-0 z-50 border-b border-gray-200 bg-white">
         <Container size="xl">
           <div className="flex items-center justify-between py-3">
-            {/* Logo */}
             <Link href="/" className="flex-shrink-0">
               <Image
                 src="/logo-sinbg.svg"
@@ -35,7 +68,6 @@ export default function Navbar() {
               />
             </Link>
 
-            {/* Desktop Navigation */}
             <nav className="hidden items-center gap-6 md:flex">
               {navLinks.map((link) => (
                 <Link
@@ -46,42 +78,48 @@ export default function Navbar() {
                   {link.label}
                 </Link>
               ))}
+              {user?.role === "admin" && (
+                <Link
+                  href="/admin"
+                  className="font-medium text-[#C41E3A] transition-colors hover:text-red-800"
+                >
+                  ADMIN
+                </Link>
+              )}
             </nav>
 
-            {/* Search & Cart */}
             <div className="flex items-center gap-3">
-              {/* Search - Desktop */}
-              <div className="hidden md:block">
+              <form onSubmit={handleSearch} className="hidden md:block">
                 <TextInput
                   placeholder="Buscar"
-                  leftSection={<Search size={16} className="text-gray-400" />}
+                  leftSection={
+                    <Search size={16} className="text-gray-400" />
+                  }
                   size="sm"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.currentTarget.value)}
                   classNames={{
                     input:
                       "border-[#C41E3A] border-2 focus:border-[#C41E3A] focus:shadow-[0_0_15px_rgba(196,30,58,0.5)]",
                   }}
-                  styles={{
-                    input: { width: 180 },
-                  }}
+                  styles={{ input: { width: 180 } }}
                 />
-              </div>
+              </form>
 
-              {/* Cart */}
-              <Link href="/">
+              <Link href="/carrito">
                 <div className="flex items-center gap-2 text-gray-700 transition-colors hover:text-red-600">
                   <div className="relative">
                     <ShoppingCart size={22} />
                     <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-600 text-xs text-white">
-                      0
+                      {cartCount}
                     </span>
                   </div>
                   <span className="hidden font-medium sm:inline">
-                    ${cartTotal.toLocaleString()}
+                    {formatPrice(cartTotal)}
                   </span>
                 </div>
               </Link>
 
-              {/* Mobile Menu Button */}
               <ActionIcon
                 variant="subtle"
                 color="gray"
@@ -96,7 +134,6 @@ export default function Navbar() {
         </Container>
       </header>
 
-      {/* Mobile Menu Drawer */}
       <Drawer
         opened={mobileMenuOpened}
         onClose={closeMobileMenu}
@@ -113,12 +150,15 @@ export default function Navbar() {
         }
       >
         <Stack gap="sm">
-          {/* Search */}
-          <TextInput placeholder="Buscar productos..." leftSection={<Search size={16} />} />
-
+          <form onSubmit={handleSearch}>
+            <TextInput
+              placeholder="Buscar productos..."
+              leftSection={<Search size={16} />}
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.currentTarget.value)}
+            />
+          </form>
           <Divider />
-
-          {/* Navigation */}
           {navLinks.map((link) => (
             <Link
               key={link.href}
@@ -129,24 +169,46 @@ export default function Navbar() {
               {link.label}
             </Link>
           ))}
-
+          {user?.role === "admin" && (
+            <Link
+              href="/admin"
+              onClick={closeMobileMenu}
+              className="py-2 font-medium text-[#C41E3A] transition-colors hover:text-red-800"
+            >
+              Panel Admin
+            </Link>
+          )}
           <Divider />
-
-          {/* Auth */}
-          <Link
-            href="/"
-            onClick={closeMobileMenu}
-            className="py-2 text-gray-700 transition-colors hover:text-red-600"
-          >
-            Iniciar sesión
-          </Link>
-          <Link
-            href="/"
-            onClick={closeMobileMenu}
-            className="py-2 text-gray-700 transition-colors hover:text-red-600"
-          >
-            Crear cuenta
-          </Link>
+          {user ? (
+            <>
+              <span className="py-2 text-sm text-gray-500">
+                {user.name} ({user.email})
+              </span>
+              <button
+                onClick={handleLogout}
+                className="py-2 text-left text-gray-700 transition-colors hover:text-red-600"
+              >
+                Cerrar sesión
+              </button>
+            </>
+          ) : (
+            <>
+              <Link
+                href="/auth/login"
+                onClick={closeMobileMenu}
+                className="py-2 text-gray-700 transition-colors hover:text-red-600"
+              >
+                Iniciar sesión
+              </Link>
+              <Link
+                href="/auth/register"
+                onClick={closeMobileMenu}
+                className="py-2 text-gray-700 transition-colors hover:text-red-600"
+              >
+                Crear cuenta
+              </Link>
+            </>
+          )}
         </Stack>
       </Drawer>
     </>

@@ -1,11 +1,20 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Container, Title } from "@mantine/core";
-import { categories } from "@/lib/mock-data";
+import { api, type CategoryResponse } from "@/lib/api-client";
 import { motion } from "framer-motion";
 
 export default function CategoriesSection() {
+  const [categories, setCategories] = useState<CategoryResponse[]>([]);
+
+  useEffect(() => {
+    api.getCategories().then(setCategories).catch(() => setCategories([]));
+  }, []);
+
+  if (categories.length === 0) return null;
+
   return (
     <section className="bg-white pt-10 pb-4">
       <Container size="xl">
@@ -40,7 +49,7 @@ export default function CategoriesSection() {
             >
               <Link
                 href={`/productos?categoria=${category.slug}`}
-                className="relative block w-full text-center rounded-lg border-2 border-white/20 bg-gradient-to-r from-[#C41E3A] to-[#9B1830] px-4 py-2.5 md:px-8 md:py-3 text-xs md:text-sm font-bold tracking-wide shadow-lg transition-all duration-300 hover:from-[#9B1830] hover:to-[#C41E3A]"
+                className="relative block w-full rounded-lg border-2 border-white/20 bg-gradient-to-r from-[#C41E3A] to-[#9B1830] px-4 py-2.5 text-center text-xs font-bold tracking-wide shadow-lg transition-all duration-300 hover:from-[#9B1830] hover:to-[#C41E3A] md:px-8 md:py-3 md:text-sm"
                 style={{ color: "white" }}
               >
                 {category.name.toUpperCase()}

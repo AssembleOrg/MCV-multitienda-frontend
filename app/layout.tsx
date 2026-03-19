@@ -6,6 +6,7 @@ import { theme } from "@/lib/theme";
 import TopBar from "@/components/layout/TopBar";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
+import AuthProvider from "@/components/providers/AuthProvider";
 import "./globals.css";
 
 const montserrat = Montserrat({
@@ -35,10 +36,12 @@ export default function RootLayout({
       <body className={`${montserrat.variable} font-sans antialiased bg-white`}>
         <MantineProvider theme={theme} defaultColorScheme="light">
           <Notifications position="top-right" />
-          <TopBar />
-          <Navbar />
-          {children}
-          <Footer />
+          <AuthProvider>
+            <TopBar />
+            <Navbar />
+            {children}
+            <Footer />
+          </AuthProvider>
         </MantineProvider>
       </body>
     </html>
