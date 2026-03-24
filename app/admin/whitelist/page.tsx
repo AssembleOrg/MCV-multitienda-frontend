@@ -181,18 +181,24 @@ export default function AdminWhitelistPage() {
                 <Table.Td>
                   <Group gap={4}>
                     <ActionIcon
-                      variant="subtle"
-                      color="blue"
+                      variant="light"
+                      color="gray"
+                      size="md"
+                      radius="md"
+                      style={{ border: "1px solid #E5E5E5" }}
                       onClick={() => handleEdit(entry)}
                     >
-                      <IconEdit size={16} />
+                      <IconEdit size={15} stroke={1.5} />
                     </ActionIcon>
                     <ActionIcon
-                      variant="subtle"
+                      variant="light"
                       color="red"
+                      size="md"
+                      radius="md"
+                      style={{ border: "1px solid #fecaca" }}
                       onClick={() => handleDelete(entry.id, entry.email)}
                     >
-                      <IconTrash size={16} />
+                      <IconTrash size={15} stroke={1.5} />
                     </ActionIcon>
                   </Group>
                 </Table.Td>
@@ -223,7 +229,7 @@ export default function AdminWhitelistPage() {
           placeholder="usuario@email.com"
           value={form.email}
           onChange={(e) =>
-            setForm((f) => ({ ...f, email: e.currentTarget.value }))
+            setForm((f) => ({ ...f, email: e.target.value }))
           }
           disabled={!!editingId}
         />
@@ -243,7 +249,7 @@ export default function AdminWhitelistPage() {
           placeholder="Referencia o motivo"
           value={form.note}
           onChange={(e) =>
-            setForm((f) => ({ ...f, note: e.currentTarget.value }))
+            setForm((f) => ({ ...f, note: e.target.value }))
           }
         />
         <Switch

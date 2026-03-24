@@ -96,11 +96,11 @@ export default function EditCampaignPage({
 
       <Paper p="lg" withBorder>
         <SimpleGrid cols={{ base: 1, md: 2 }} mb="md">
-          <TextInput label="Nombre" required value={form.name} onChange={(e) => setForm((f) => ({ ...f, name: e.currentTarget.value }))} />
-          <TextInput label="Código" required value={form.code} onChange={(e) => setForm((f) => ({ ...f, code: e.currentTarget.value.toUpperCase() }))} />
+          <TextInput label="Nombre" required value={form.name} onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))} />
+          <TextInput label="Código" required value={form.code} onChange={(e) => setForm((f) => ({ ...f, code: e.target.value.toUpperCase() }))} />
         </SimpleGrid>
 
-        <Textarea label="Descripción" mb="md" value={form.description} onChange={(e) => setForm((f) => ({ ...f, description: e.currentTarget.value }))} />
+        <Textarea label="Descripción" mb="md" value={form.description} onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))} />
 
         <SimpleGrid cols={{ base: 1, sm: 2, md: 3 }} mb="md">
           <Select
@@ -121,8 +121,8 @@ export default function EditCampaignPage({
         </SimpleGrid>
 
         <SimpleGrid cols={{ base: 1, sm: 3 }} mb="md">
-          <TextInput label="Fecha Inicio" type="datetime-local" required value={form.startDate} onChange={(e) => setForm((f) => ({ ...f, startDate: e.currentTarget.value }))} />
-          <TextInput label="Fecha Fin" type="datetime-local" required value={form.endDate} onChange={(e) => setForm((f) => ({ ...f, endDate: e.currentTarget.value }))} />
+          <TextInput label="Fecha Inicio" type="datetime-local" required value={form.startDate} onChange={(e) => setForm((f) => ({ ...f, startDate: e.target.value }))} />
+          <TextInput label="Fecha Fin" type="datetime-local" required value={form.endDate} onChange={(e) => setForm((f) => ({ ...f, endDate: e.target.value }))} />
           <Switch label="Activa" mt={28} checked={form.active} onChange={(e) => setForm((f) => ({ ...f, active: e.currentTarget.checked }))} />
         </SimpleGrid>
 

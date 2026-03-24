@@ -7,7 +7,12 @@ import { Phone, Mail } from "lucide-react";
 import { useAuthStore } from "@/lib/store";
 import { api } from "@/lib/api-client";
 
-export default function TopBar() {
+interface TopBarProps {
+  phone?: string | null;
+  email?: string | null;
+}
+
+export default function TopBar({ phone, email }: TopBarProps) {
   const router = useRouter();
   const user = useAuthStore((s) => s.user);
   const setUser = useAuthStore((s) => s.setUser);
@@ -20,27 +25,31 @@ export default function TopBar() {
   };
 
   return (
-    <div className="relative bg-[#1a1a1a] py-2 text-sm">
+    <div className="relative hidden bg-[#1a1a1a] py-2 text-sm sm:block">
       <Container size="xl">
         <div className="flex items-center justify-between">
           {/* Contacto */}
           <div className="flex items-center gap-4">
-            <a
-              href="tel:+5491112345678"
-              className="flex items-center gap-1.5 transition-colors hover:text-[#C41E3A]"
-              style={{ color: "white" }}
-            >
-              <Phone size={14} />
-              <span className="hidden sm:inline">11 1234-5678</span>
-            </a>
-            <a
-              href="mailto:contacto@mcv.com"
-              className="flex items-center gap-1.5 transition-colors hover:text-[#C41E3A]"
-              style={{ color: "white" }}
-            >
-              <Mail size={14} />
-              <span className="hidden sm:inline">contacto@mcv.com</span>
-            </a>
+            {phone && (
+              <a
+                href={`tel:${phone}`}
+                className="flex items-center gap-1.5 transition-colors hover:text-[#C41E3A]"
+                style={{ color: "white" }}
+              >
+                <Phone size={14} />
+                <span className="hidden sm:inline">{phone}</span>
+              </a>
+            )}
+            {email && (
+              <a
+                href={`mailto:${email}`}
+                className="flex items-center gap-1.5 transition-colors hover:text-[#C41E3A]"
+                style={{ color: "white" }}
+              >
+                <Mail size={14} />
+                <span className="hidden sm:inline">{email}</span>
+              </a>
+            )}
           </div>
 
           {/* Auth Links */}

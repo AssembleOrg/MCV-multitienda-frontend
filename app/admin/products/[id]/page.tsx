@@ -172,7 +172,7 @@ export default function EditProductPage({
             required
             value={form.name}
             onChange={(e) =>
-              setForm((f) => ({ ...f, name: e.currentTarget.value }))
+              setForm((f) => ({ ...f, name: e.target.value }))
             }
           />
           <TextInput
@@ -180,7 +180,7 @@ export default function EditProductPage({
             required
             value={form.slug}
             onChange={(e) =>
-              setForm((f) => ({ ...f, slug: e.currentTarget.value }))
+              setForm((f) => ({ ...f, slug: e.target.value }))
             }
           />
         </SimpleGrid>
@@ -192,7 +192,7 @@ export default function EditProductPage({
           minRows={3}
           value={form.description}
           onChange={(e) =>
-            setForm((f) => ({ ...f, description: e.currentTarget.value }))
+            setForm((f) => ({ ...f, description: e.target.value }))
           }
         />
 
@@ -227,7 +227,7 @@ export default function EditProductPage({
             required
             value={form.sku}
             onChange={(e) =>
-              setForm((f) => ({ ...f, sku: e.currentTarget.value }))
+              setForm((f) => ({ ...f, sku: e.target.value }))
             }
           />
         </SimpleGrid>
@@ -284,7 +284,7 @@ export default function EditProductPage({
               value={variant.name}
               onChange={(e) => {
                 const copy = [...variants];
-                copy[i].name = e.currentTarget.value;
+                copy[i].name = e.target.value;
                 setVariants(copy);
               }}
             />
@@ -311,7 +311,7 @@ export default function EditProductPage({
               value={variant.value}
               onChange={(e) => {
                 const copy = [...variants];
-                copy[i].value = e.currentTarget.value;
+                copy[i].value = e.target.value;
                 setVariants(copy);
               }}
             />

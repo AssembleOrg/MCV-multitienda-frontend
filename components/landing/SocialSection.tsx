@@ -5,13 +5,20 @@ import { motion } from "framer-motion";
 import { Instagram, Facebook } from "lucide-react";
 import { FaTiktok } from "react-icons/fa";
 
-const socials = [
-  { icon: Instagram, label: "Instagram", href: "#" },
-  { icon: FaTiktok, label: "TikTok", href: "#" },
-  { icon: Facebook, label: "Facebook", href: "#" },
-];
+interface SocialSectionProps {
+  instagram?: string | null;
+  facebook?: string | null;
+  tiktok?: string | null;
+}
 
-export default function SocialSection() {
+export default function SocialSection({ instagram, facebook, tiktok }: SocialSectionProps) {
+  const socials = [
+    instagram ? { icon: Instagram, label: "Instagram", href: instagram } : null,
+    tiktok ? { icon: FaTiktok, label: "TikTok", href: tiktok } : null,
+    facebook ? { icon: Facebook, label: "Facebook", href: facebook } : null,
+  ].filter(Boolean) as { icon: React.ElementType; label: string; href: string }[];
+
+  if (socials.length === 0) return null;
   return (
     <section className="bg-gradient-to-b from-[#1a1a1a] to-[#252525] py-16 relative overflow-hidden">
       {/* Neon line top */}

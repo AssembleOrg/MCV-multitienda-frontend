@@ -117,8 +117,8 @@ export default function AdminPromosPage() {
                 </Table.Td>
                 <Table.Td>
                   <Group gap={4}>
-                    <ActionIcon variant="subtle" color="blue" onClick={() => handleEdit(promo)}><IconEdit size={16} /></ActionIcon>
-                    <ActionIcon variant="subtle" color="red" onClick={() => handleDelete(promo.id)}><IconTrash size={16} /></ActionIcon>
+                    <ActionIcon variant="light" color="gray" size="md" radius="md" style={{ border: "1px solid #E5E5E5" }} onClick={() => handleEdit(promo)}><IconEdit size={15} stroke={1.5} /></ActionIcon>
+                    <ActionIcon variant="light" color="red" size="md" radius="md" style={{ border: "1px solid #fecaca" }} onClick={() => handleDelete(promo.id)}><IconTrash size={15} stroke={1.5} /></ActionIcon>
                   </Group>
                 </Table.Td>
               </Table.Tr>
@@ -128,8 +128,8 @@ export default function AdminPromosPage() {
       )}
 
       <Modal opened={modalOpened} onClose={closeModal} title={editingId ? "Editar Promo" : "Nueva Promo"}>
-        <TextInput label="Texto" required mb="sm" value={form.text} onChange={(e) => setForm((f) => ({ ...f, text: e.currentTarget.value }))} />
-        <TextInput label="Link (opcional)" mb="sm" value={form.link} onChange={(e) => setForm((f) => ({ ...f, link: e.currentTarget.value }))} />
+        <TextInput label="Texto" required mb="sm" value={form.text} onChange={(e) => setForm((f) => ({ ...f, text: e.target.value }))} />
+        <TextInput label="Link (opcional)" mb="sm" value={form.link} onChange={(e) => setForm((f) => ({ ...f, link: e.target.value }))} />
         <NumberInput label="Orden" mb="sm" min={0} value={form.sortOrder} onChange={(v) => setForm((f) => ({ ...f, sortOrder: Number(v) || 0 }))} />
         <Switch label="Activa" mb="md" checked={form.active} onChange={(e) => setForm((f) => ({ ...f, active: e.currentTarget.checked }))} />
         <Group justify="flex-end">

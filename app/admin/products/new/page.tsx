@@ -105,14 +105,14 @@ export default function NewProductPage() {
             label="Nombre"
             required
             value={form.name}
-            onChange={(e) => handleNameChange(e.currentTarget.value)}
+            onChange={(e) => handleNameChange(e.target.value)}
           />
           <TextInput
             label="Slug"
             required
             value={form.slug}
             onChange={(e) =>
-              setForm((f) => ({ ...f, slug: e.currentTarget.value }))
+              setForm((f) => ({ ...f, slug: e.target.value }))
             }
           />
         </SimpleGrid>
@@ -124,7 +124,7 @@ export default function NewProductPage() {
           minRows={3}
           value={form.description}
           onChange={(e) =>
-            setForm((f) => ({ ...f, description: e.currentTarget.value }))
+            setForm((f) => ({ ...f, description: e.target.value }))
           }
         />
 
@@ -159,7 +159,7 @@ export default function NewProductPage() {
             required
             value={form.sku}
             onChange={(e) =>
-              setForm((f) => ({ ...f, sku: e.currentTarget.value }))
+              setForm((f) => ({ ...f, sku: e.target.value }))
             }
           />
         </SimpleGrid>
@@ -216,7 +216,7 @@ export default function NewProductPage() {
               value={variant.name}
               onChange={(e) => {
                 const copy = [...variants];
-                copy[i].name = e.currentTarget.value;
+                copy[i].name = e.target.value;
                 setVariants(copy);
               }}
             />
@@ -243,7 +243,7 @@ export default function NewProductPage() {
               value={variant.value}
               onChange={(e) => {
                 const copy = [...variants];
-                copy[i].value = e.currentTarget.value;
+                copy[i].value = e.target.value;
                 setVariants(copy);
               }}
             />

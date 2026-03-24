@@ -4,7 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Card, Text } from "@mantine/core";
 import { type ProductResponse } from "@/lib/api-client";
-import { formatPrice } from "@/lib/utils";
+import { formatPrice, calculateDiscount } from "@/lib/utils";
 import { motion } from "framer-motion";
 
 interface ProductCardProps {
@@ -63,15 +63,23 @@ export default function ProductCard({ product }: ProductCardProps) {
               {product.name}
             </Text>
 
-            <div className="flex items-center gap-2">
-              <Text className="inline-block text-xl font-bold text-[#C41E3A] transition-transform group-hover:scale-105">
-                {formatPrice(product.price)}
-              </Text>
+            <div className="mt-2">
               {product.originalPrice && (
-                <Text className="text-sm text-gray-400 line-through">
-                  {formatPrice(product.originalPrice)}
-                </Text>
+                <div className="mb-1 flex items-center gap-1.5">
+                  <span style={{ fontSize: 11, color: "#9ca3af", textDecoration: "line-through" }}>
+                    {formatPrice(product.originalPrice)}
+                  </span>
+                  <span style={{ fontSize: 10, background: "#C41E3A", color: "#fff", borderRadius: 4, padding: "1px 5px", fontWeight: 700 }}>
+                    -{calculateDiscount(product.originalPrice, product.price)}%
+                  </span>
+                </div>
               )}
+              <span
+                style={{ fontSize: 20, fontWeight: 800, color: "#111", display: "inline-block", lineHeight: 1 }}
+                className="transition-transform group-hover:scale-105"
+              >
+                {formatPrice(product.price)}
+              </span>
             </div>
           </div>
         </Card>

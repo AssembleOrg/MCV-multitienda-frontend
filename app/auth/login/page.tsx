@@ -60,7 +60,7 @@ export default function LoginPage() {
             placeholder="tu@email.com"
             required
             value={email}
-            onChange={(e) => setEmail(e.currentTarget.value)}
+            onChange={(e) => setEmail(e.target.value)}
           />
           <PasswordInput
             label="Contraseña"
@@ -68,7 +68,7 @@ export default function LoginPage() {
             required
             mt="md"
             value={password}
-            onChange={(e) => setPassword(e.currentTarget.value)}
+            onChange={(e) => setPassword(e.target.value)}
           />
 
           {error && (

@@ -142,7 +142,7 @@ export default function OrderDetailPage({
           <Textarea
             label="Notas"
             value={notes}
-            onChange={(e) => setNotes(e.currentTarget.value)}
+            onChange={(e) => setNotes(e.target.value)}
             style={{ flex: 1 }}
           />
           <Button color="mcvRed" loading={saving} onClick={handleUpdate}>

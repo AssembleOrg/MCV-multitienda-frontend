@@ -1,9 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Container, Title, SimpleGrid, Loader, Center } from "@mantine/core";
+import { Container, Title, SimpleGrid } from "@mantine/core";
 import { api, type ProductResponse } from "@/lib/api-client";
 import ProductCard from "@/components/products/ProductCard";
+import { ProductCardSkeleton } from "@/components/ui/skeletons";
 import { motion } from "framer-motion";
 
 export default function FeaturedProducts() {
@@ -65,9 +66,11 @@ export default function FeaturedProducts() {
         </div>
 
         {loading ? (
-          <Center py="xl">
-            <Loader color="#C41E3A" />
-          </Center>
+          <SimpleGrid cols={{ base: 2, sm: 2, md: 3, lg: 4 }} spacing={{ base: "sm", md: "lg" }}>
+            {Array.from({ length: 8 }).map((_, i) => (
+              <ProductCardSkeleton key={i} />
+            ))}
+          </SimpleGrid>
         ) : (
           <SimpleGrid
             cols={{ base: 2, sm: 2, md: 3, lg: 4 }}

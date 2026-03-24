@@ -12,11 +12,10 @@ import {
   Badge,
   NumberInput,
   SimpleGrid,
-  Loader,
-  Center,
   Breadcrumbs,
   Anchor,
 } from "@mantine/core";
+import { ProductDetailSkeleton } from "@/components/ui/skeletons";
 import { IconShoppingCart, IconArrowLeft } from "@tabler/icons-react";
 import { api, type ProductResponse } from "@/lib/api-client";
 import { useCartStore } from "@/lib/store";
@@ -51,9 +50,11 @@ export default function ProductDetailPage({
 
   if (loading) {
     return (
-      <Center py={100}>
-        <Loader color="#C41E3A" />
-      </Center>
+      <section className="bg-white py-8">
+        <Container size="xl">
+          <ProductDetailSkeleton />
+        </Container>
+      </section>
     );
   }
 
@@ -211,16 +212,19 @@ export default function ProductDetailPage({
 
             {/* Price */}
             <div className="mb-6">
-              <Group gap="sm" align="baseline">
-                <Text className="text-3xl font-bold text-[#C41E3A]">
-                  {formatPrice(product.price)}
-                </Text>
-                {product.originalPrice && (
-                  <Text size="lg" c="dimmed" td="line-through">
+              {product.originalPrice && (
+                <div className="mb-1 flex items-center gap-2">
+                  <Text size="sm" c="dimmed" td="line-through">
                     {formatPrice(product.originalPrice)}
                   </Text>
-                )}
-              </Group>
+                  <Badge color="red" size="sm" variant="filled">
+                    -{discount}%
+                  </Badge>
+                </div>
+              )}
+              <Text className="text-3xl font-bold leading-none text-[#C41E3A]">
+                {formatPrice(product.price)}
+              </Text>
               <Text size="xs" c="dimmed" mt={2}>
                 SKU: {product.sku}
               </Text>

@@ -4,8 +4,11 @@ import PromoSlider from "@/components/landing/PromoSlider";
 import CategoriesSection from "@/components/landing/CategoriesSection";
 import FeaturedProducts from "@/components/landing/FeaturedProducts";
 import SocialSection from "@/components/landing/SocialSection";
+import { prisma } from "@/lib/prisma";
 
-export default function HomePage() {
+export default async function HomePage() {
+  const store = await prisma.multitienda_store.findFirst().catch(() => null);
+
   return (
     <main>
       {/* Trust Badges - Línea con iconos animados */}
@@ -24,7 +27,11 @@ export default function HomePage() {
       <FeaturedProducts />
 
       {/* Social Section - Redes sociales */}
-      <SocialSection />
+      <SocialSection
+        instagram={store?.instagram}
+        facebook={store?.facebook}
+        tiktok={store?.tiktok}
+      />
     </main>
   );
 }

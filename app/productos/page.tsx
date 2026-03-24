@@ -16,8 +16,13 @@ import {
   RangeSlider,
   Badge,
   ActionIcon,
+  Drawer,
+  Button,
+  Stack,
 } from "@mantine/core";
-import { IconSearch, IconX } from "@tabler/icons-react";
+import { useDisclosure, useMediaQuery } from "@mantine/hooks";
+import { ProductCardSkeleton } from "@/components/ui/skeletons";
+import { IconSearch, IconX, IconAdjustments } from "@tabler/icons-react";
 import { api, type ProductResponse, type CategoryResponse } from "@/lib/api-client";
 import ProductCard from "@/components/products/ProductCard";
 import { motion } from "framer-motion";
@@ -44,6 +49,8 @@ function ProductsContent() {
   const [category, setCategory] = useState(searchParams.get("categoria") || "");
   const [sortBy, setSortBy] = useState("newest");
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 1000000]);
+  const [drawerOpened, { open: openDrawer, close: closeDrawer }] = useDisclosure(false);
+  const isMobile = useMediaQuery("(max-width: 48em)");
 
   useEffect(() => {
     api.getCategories().then(setCategories).catch(() => {});
@@ -105,41 +112,122 @@ function ProductsContent() {
 
         {/* Filters */}
         <div className="mb-6 rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
-          <Group gap="md" grow wrap="wrap">
-            <TextInput
-              placeholder="Buscar productos..."
-              leftSection={<IconSearch size={16} />}
-              value={search}
-              onChange={(e) => {
-                setSearch(e.currentTarget.value);
-                setPage(1);
-              }}
-            />
-            <Select
-              placeholder="Categoría"
-              clearable
-              data={categories.map((c) => ({ value: c.slug, label: c.name }))}
-              value={category}
-              onChange={(v) => {
-                setCategory(v || "");
-                setPage(1);
-              }}
-            />
-            <Select
-              placeholder="Ordenar por"
-              data={[
-                { value: "newest", label: "Más recientes" },
-                { value: "price-asc", label: "Menor precio" },
-                { value: "price-desc", label: "Mayor precio" },
-                { value: "name", label: "Nombre A-Z" },
-              ]}
-              value={sortBy}
-              onChange={(v) => {
-                setSortBy(v || "newest");
-                setPage(1);
-              }}
-            />
-          </Group>
+          {isMobile ? (
+            <>
+              <Group gap="xs" wrap="nowrap">
+                <TextInput
+                  placeholder="Buscar productos..."
+                  leftSection={<IconSearch size={16} />}
+                  value={search}
+                  onChange={(e) => {
+                    setSearch(e.target.value);
+                    setPage(1);
+                  }}
+                  style={{ flex: 1 }}
+                />
+                <Button
+                  variant={category || sortBy !== "newest" ? "light" : "subtle"}
+                  color={category || sortBy !== "newest" ? "red" : "gray"}
+                  leftSection={<IconAdjustments size={16} />}
+                  onClick={openDrawer}
+                  size="sm"
+                  px="sm"
+                >
+                  Filtros
+                </Button>
+              </Group>
+
+              <Drawer
+                opened={drawerOpened}
+                onClose={closeDrawer}
+                position="bottom"
+                title="Filtros"
+                size="auto"
+              >
+                <Stack gap="md" pb="md">
+                  <Select
+                    label="Categoría"
+                    placeholder="Todas las categorías"
+                    clearable
+                    data={categories.map((c) => ({ value: c.slug, label: c.name }))}
+                    value={category}
+                    onChange={(v) => {
+                      setCategory(v || "");
+                      setPage(1);
+                    }}
+                  />
+                  <Select
+                    label="Ordenar por"
+                    data={[
+                      { value: "newest", label: "Más recientes" },
+                      { value: "price-asc", label: "Menor precio" },
+                      { value: "price-desc", label: "Mayor precio" },
+                      { value: "name", label: "Nombre A-Z" },
+                    ]}
+                    value={sortBy}
+                    onChange={(v) => {
+                      setSortBy(v || "newest");
+                      setPage(1);
+                    }}
+                  />
+                  <Button color="mcvRed" fullWidth onClick={closeDrawer}>
+                    Aplicar
+                  </Button>
+                  {(category || sortBy !== "newest") && (
+                    <Button
+                      variant="subtle"
+                      color="gray"
+                      fullWidth
+                      onClick={() => {
+                        setCategory("");
+                        setSortBy("newest");
+                        setPage(1);
+                        closeDrawer();
+                      }}
+                    >
+                      Limpiar filtros
+                    </Button>
+                  )}
+                </Stack>
+              </Drawer>
+            </>
+          ) : (
+            <Group gap="md" grow wrap="wrap">
+              <TextInput
+                placeholder="Buscar productos..."
+                leftSection={<IconSearch size={16} />}
+                value={search}
+                onChange={(e) => {
+                  setSearch(e.target.value);
+                  setPage(1);
+                }}
+              />
+              <Select
+                placeholder="Categoría"
+                clearable
+                data={categories.map((c) => ({ value: c.slug, label: c.name }))}
+                value={category}
+                onChange={(v) => {
+                  setCategory(v || "");
+                  setPage(1);
+                }}
+              />
+              <Select
+                placeholder="Ordenar por"
+                data={[
+                  { value: "newest", label: "Más recientes" },
+                  { value: "price-asc", label: "Menor precio" },
+                  { value: "price-desc", label: "Mayor precio" },
+                  { value: "name", label: "Nombre A-Z" },
+                ]}
+                value={sortBy}
+                onChange={(v) => {
+                  setSortBy(v || "newest");
+                  setPage(1);
+                }}
+              />
+            </Group>
+          )}
 
           {hasFilters && (
             <Group mt="sm" justify="space-between">
@@ -165,9 +253,11 @@ function ProductsContent() {
 
         {/* Products Grid */}
         {loading ? (
-          <Center py={80}>
-            <Loader color="#C41E3A" />
-          </Center>
+          <SimpleGrid cols={{ base: 2, sm: 2, md: 3, lg: 4 }} spacing={{ base: "sm", md: "lg" }}>
+            {Array.from({ length: 12 }).map((_, i) => (
+              <ProductCardSkeleton key={i} />
+            ))}
+          </SimpleGrid>
         ) : products.length === 0 ? (
           <Center py={80}>
             <div className="text-center">

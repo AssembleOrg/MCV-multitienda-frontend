@@ -180,7 +180,7 @@ function CheckoutContent() {
                     required
                     value={contact.name}
                     onChange={(e) =>
-                      setContact((c) => ({ ...c, name: e.currentTarget.value }))
+                      setContact((c) => ({ ...c, name: e.target.value }))
                     }
                   />
                   <TextInput
@@ -189,7 +189,7 @@ function CheckoutContent() {
                     required
                     value={contact.email}
                     onChange={(e) =>
-                      setContact((c) => ({ ...c, email: e.currentTarget.value }))
+                      setContact((c) => ({ ...c, email: e.target.value }))
                     }
                   />
                   <TextInput
@@ -197,7 +197,7 @@ function CheckoutContent() {
                     required
                     value={contact.phone}
                     onChange={(e) =>
-                      setContact((c) => ({ ...c, phone: e.currentTarget.value }))
+                      setContact((c) => ({ ...c, phone: e.target.value }))
                     }
                   />
                 </SimpleGrid>
@@ -213,7 +213,7 @@ function CheckoutContent() {
                     label="Calle y número"
                     value={address.street}
                     onChange={(e) =>
-                      setAddress((a) => ({ ...a, street: e.currentTarget.value }))
+                      setAddress((a) => ({ ...a, street: e.target.value }))
                     }
                     className="sm:col-span-2"
                   />
@@ -221,21 +221,21 @@ function CheckoutContent() {
                     label="Ciudad"
                     value={address.city}
                     onChange={(e) =>
-                      setAddress((a) => ({ ...a, city: e.currentTarget.value }))
+                      setAddress((a) => ({ ...a, city: e.target.value }))
                     }
                   />
                   <TextInput
                     label="Provincia"
                     value={address.state}
                     onChange={(e) =>
-                      setAddress((a) => ({ ...a, state: e.currentTarget.value }))
+                      setAddress((a) => ({ ...a, state: e.target.value }))
                     }
                   />
                   <TextInput
                     label="Código postal"
                     value={address.zipCode}
                     onChange={(e) =>
-                      setAddress((a) => ({ ...a, zipCode: e.currentTarget.value }))
+                      setAddress((a) => ({ ...a, zipCode: e.target.value }))
                     }
                   />
                 </SimpleGrid>
@@ -247,7 +247,7 @@ function CheckoutContent() {
                   label="Notas (opcional)"
                   placeholder="Indicaciones para el envío, etc."
                   value={notes}
-                  onChange={(e) => setNotes(e.currentTarget.value)}
+                  onChange={(e) => setNotes(e.target.value)}
                 />
               </Paper>
             </div>

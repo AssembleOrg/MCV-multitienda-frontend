@@ -17,7 +17,10 @@ import {
   Badge,
   Center,
   Divider,
+  Card,
+  Stack,
 } from "@mantine/core";
+import { useMediaQuery } from "@mantine/hooks";
 import { IconTrash, IconArrowLeft, IconTag } from "@tabler/icons-react";
 import { useCartStore } from "@/lib/store";
 import { api } from "@/lib/api-client";
@@ -30,6 +33,7 @@ export default function CartPage() {
   const updateQuantity = useCartStore((s) => s.updateQuantity);
   const getTotal = useCartStore((s) => s.getTotal);
 
+  const isMobile = useMediaQuery("(max-width: 48em)");
   const [campaignCode, setCampaignCode] = useState("");
   const [discount, setDiscount] = useState(0);
   const [appliedCode, setAppliedCode] = useState("");
@@ -107,81 +111,116 @@ export default function CartPage() {
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
           {/* Items */}
           <div className="lg:col-span-2">
-            <Paper withBorder p="md">
-              <Table>
-                <Table.Thead>
-                  <Table.Tr>
-                    <Table.Th>Producto</Table.Th>
-                    <Table.Th>Precio</Table.Th>
-                    <Table.Th>Cantidad</Table.Th>
-                    <Table.Th>Subtotal</Table.Th>
-                    <Table.Th />
-                  </Table.Tr>
-                </Table.Thead>
-                <Table.Tbody>
-                  {items.map((item) => (
-                    <Table.Tr key={`${item.productId}-${JSON.stringify(item.selectedVariants)}`}>
-                      <Table.Td>
-                        <Group gap="sm">
-                          <div className="relative h-14 w-14 overflow-hidden rounded-md border border-gray-200 bg-gray-50">
-                            {item.image ? (
-                              <Image
-                                src={item.image}
-                                alt={item.name}
-                                fill
-                                className="object-cover"
-                                sizes="56px"
-                              />
-                            ) : (
-                              <div className="flex h-full items-center justify-center text-lg text-gray-300">
-                                {item.name.charAt(0)}
-                              </div>
-                            )}
-                          </div>
-                          <div>
-                            <Text size="sm" fw={500}>
-                              {item.name}
-                            </Text>
-                            {item.selectedVariants.length > 0 && (
-                              <Group gap={4}>
-                                {item.selectedVariants.map((v) => (
-                                  <Badge key={v.id} size="xs" variant="light">
-                                    {v.value}
-                                  </Badge>
-                                ))}
-                              </Group>
-                            )}
-                          </div>
-                        </Group>
-                      </Table.Td>
-                      <Table.Td>{formatPrice(item.price)}</Table.Td>
-                      <Table.Td>
+            {isMobile ? (
+              <Stack gap="xs">
+                {items.map((item) => (
+                  <Card key={`${item.productId}-${JSON.stringify(item.selectedVariants)}`} withBorder padding="sm" radius="sm">
+                    <Group justify="space-between" wrap="nowrap" align="flex-start">
+                      <Group gap="sm" wrap="nowrap" style={{ minWidth: 0 }}>
+                        <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-md border border-gray-200 bg-gray-50">
+                          {item.image ? (
+                            <Image src={item.image} alt={item.name} fill className="object-cover" sizes="56px" />
+                          ) : (
+                            <div className="flex h-full items-center justify-center text-lg text-gray-300">
+                              {item.name.charAt(0)}
+                            </div>
+                          )}
+                        </div>
+                        <div style={{ minWidth: 0 }}>
+                          <Text size="sm" fw={600} truncate>{item.name}</Text>
+                          {item.selectedVariants.length > 0 && (
+                            <Group gap={4} mt={2}>
+                              {item.selectedVariants.map((v) => (
+                                <Badge key={v.id} size="xs" variant="light">{v.value}</Badge>
+                              ))}
+                            </Group>
+                          )}
+                        </div>
+                      </Group>
+                      <ActionIcon color="red" variant="subtle" onClick={() => removeItem(item.productId)} style={{ flexShrink: 0 }}>
+                        <IconTrash size={16} />
+                      </ActionIcon>
+                    </Group>
+                    <Group justify="space-between" align="center" mt={10}>
+                      <Text size="xs" c="dimmed">{formatPrice(item.price)} × {item.quantity}</Text>
+                      <Group gap="sm" align="center">
                         <NumberInput
                           value={item.quantity}
                           onChange={(v) => updateQuantity(item.productId, Number(v) || 1)}
                           min={1}
                           max={99}
-                          w={80}
+                          w={72}
                           size="xs"
                         />
-                      </Table.Td>
-                      <Table.Td fw={500}>
-                        {formatPrice(item.price * item.quantity)}
-                      </Table.Td>
-                      <Table.Td>
-                        <ActionIcon
-                          color="red"
-                          variant="subtle"
-                          onClick={() => removeItem(item.productId)}
-                        >
-                          <IconTrash size={16} />
-                        </ActionIcon>
-                      </Table.Td>
+                        <Text size="sm" fw={600} c="#C41E3A">
+                          {formatPrice(item.price * item.quantity)}
+                        </Text>
+                      </Group>
+                    </Group>
+                  </Card>
+                ))}
+              </Stack>
+            ) : (
+              <Paper withBorder p="md">
+                <Table>
+                  <Table.Thead>
+                    <Table.Tr>
+                      <Table.Th>Producto</Table.Th>
+                      <Table.Th>Precio</Table.Th>
+                      <Table.Th>Cantidad</Table.Th>
+                      <Table.Th>Subtotal</Table.Th>
+                      <Table.Th />
                     </Table.Tr>
-                  ))}
-                </Table.Tbody>
-              </Table>
-            </Paper>
+                  </Table.Thead>
+                  <Table.Tbody>
+                    {items.map((item) => (
+                      <Table.Tr key={`${item.productId}-${JSON.stringify(item.selectedVariants)}`}>
+                        <Table.Td>
+                          <Group gap="sm">
+                            <div className="relative h-14 w-14 overflow-hidden rounded-md border border-gray-200 bg-gray-50">
+                              {item.image ? (
+                                <Image src={item.image} alt={item.name} fill className="object-cover" sizes="56px" />
+                              ) : (
+                                <div className="flex h-full items-center justify-center text-lg text-gray-300">
+                                  {item.name.charAt(0)}
+                                </div>
+                              )}
+                            </div>
+                            <div>
+                              <Text size="sm" fw={500}>{item.name}</Text>
+                              {item.selectedVariants.length > 0 && (
+                                <Group gap={4}>
+                                  {item.selectedVariants.map((v) => (
+                                    <Badge key={v.id} size="xs" variant="light">{v.value}</Badge>
+                                  ))}
+                                </Group>
+                              )}
+                            </div>
+                          </Group>
+                        </Table.Td>
+                        <Table.Td>{formatPrice(item.price)}</Table.Td>
+                        <Table.Td>
+                          <NumberInput
+                            value={item.quantity}
+                            onChange={(v) => updateQuantity(item.productId, Number(v) || 1)}
+                            min={1}
+                            max={99}
+                            w={80}
+                            size="xs"
+                          />
+                        </Table.Td>
+                        <Table.Td fw={500}>{formatPrice(item.price * item.quantity)}</Table.Td>
+                        <Table.Td>
+                          <ActionIcon color="red" variant="subtle" onClick={() => removeItem(item.productId)}>
+                            <IconTrash size={16} />
+                          </ActionIcon>
+                        </Table.Td>
+                      </Table.Tr>
+                    ))}
+                  </Table.Tbody>
+                </Table>
+              </Paper>
+            )}
           </div>
 
           {/* Summary */}
@@ -197,7 +236,7 @@ export default function CartPage() {
                   placeholder="Código de descuento"
                   leftSection={<IconTag size={14} />}
                   value={campaignCode}
-                  onChange={(e) => setCampaignCode(e.currentTarget.value)}
+                  onChange={(e) => setCampaignCode(e.target.value)}
                   style={{ flex: 1 }}
                   size="sm"
                 />

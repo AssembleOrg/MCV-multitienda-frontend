@@ -68,14 +68,14 @@ export default function NewCampaignPage() {
             label="Nombre"
             required
             value={form.name}
-            onChange={(e) => setForm((f) => ({ ...f, name: e.currentTarget.value }))}
+            onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
           />
           <TextInput
             label="Código"
             required
             placeholder="DESCUENTO10"
             value={form.code}
-            onChange={(e) => setForm((f) => ({ ...f, code: e.currentTarget.value.toUpperCase() }))}
+            onChange={(e) => setForm((f) => ({ ...f, code: e.target.value.toUpperCase() }))}
           />
         </SimpleGrid>
 
@@ -83,7 +83,7 @@ export default function NewCampaignPage() {
           label="Descripción"
           mb="md"
           value={form.description}
-          onChange={(e) => setForm((f) => ({ ...f, description: e.currentTarget.value }))}
+          onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))}
         />
 
         <SimpleGrid cols={{ base: 1, sm: 2, md: 3 }} mb="md">
@@ -140,14 +140,14 @@ export default function NewCampaignPage() {
             type="datetime-local"
             required
             value={form.startDate}
-            onChange={(e) => setForm((f) => ({ ...f, startDate: e.currentTarget.value }))}
+            onChange={(e) => setForm((f) => ({ ...f, startDate: e.target.value }))}
           />
           <TextInput
             label="Fecha Fin"
             type="datetime-local"
             required
             value={form.endDate}
-            onChange={(e) => setForm((f) => ({ ...f, endDate: e.currentTarget.value }))}
+            onChange={(e) => setForm((f) => ({ ...f, endDate: e.target.value }))}
           />
           <Switch
             label="Activa"

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
@@ -31,8 +31,13 @@ export default function Navbar() {
 
   const [searchQuery, setSearchQuery] = useState("");
 
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => { setMounted(true); }, []);
+
   const cartCount = useCartStore((s) => s.getCount());
   const cartTotal = useCartStore((s) => s.getTotal());
+  const displayCount = mounted ? cartCount : 0;
+  const displayTotal = mounted ? cartTotal : 0;
   const user = useAuthStore((s) => s.user);
   const setUser = useAuthStore((s) => s.setUser);
 
@@ -97,7 +102,7 @@ export default function Navbar() {
                   }
                   size="sm"
                   value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.currentTarget.value)}
+                  onChange={(e) => setSearchQuery(e.target.value)}
                   classNames={{
                     input:
                       "border-[#C41E3A] border-2 focus:border-[#C41E3A] focus:shadow-[0_0_15px_rgba(196,30,58,0.5)]",
@@ -111,11 +116,11 @@ export default function Navbar() {
                   <div className="relative">
                     <ShoppingCart size={22} />
                     <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-600 text-xs text-white">
-                      {cartCount}
+                      {displayCount}
                     </span>
                   </div>
                   <span className="hidden font-medium sm:inline">
-                    {formatPrice(cartTotal)}
+                    {formatPrice(displayTotal)}
                   </span>
                 </div>
               </Link>
@@ -155,7 +160,7 @@ export default function Navbar() {
               placeholder="Buscar productos..."
               leftSection={<Search size={16} />}
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.currentTarget.value)}
+              onChange={(e) => setSearchQuery(e.target.value)}
             />
           </form>
           <Divider />

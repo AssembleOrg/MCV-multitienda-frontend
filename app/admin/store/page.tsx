@@ -109,23 +109,23 @@ export default function AdminStorePage() {
         </Group>
 
         <SimpleGrid cols={{ base: 1, md: 2 }} mb="md">
-          <TextInput label="Nombre de la Tienda" value={form.name} onChange={(e) => setForm((f) => ({ ...f, name: e.currentTarget.value }))} />
-          <TextInput label="Email" value={form.email} onChange={(e) => setForm((f) => ({ ...f, email: e.currentTarget.value }))} />
+          <TextInput label="Nombre de la Tienda" value={form.name} onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))} />
+          <TextInput label="Email" value={form.email} onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))} />
         </SimpleGrid>
 
-        <Textarea label="Descripción" mb="md" value={form.description} onChange={(e) => setForm((f) => ({ ...f, description: e.currentTarget.value }))} />
+        <Textarea label="Descripción" mb="md" value={form.description} onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))} />
 
         <SimpleGrid cols={{ base: 1, md: 2 }} mb="md">
-          <TextInput label="Teléfono" value={form.phone} onChange={(e) => setForm((f) => ({ ...f, phone: e.currentTarget.value }))} />
-          <TextInput label="Dirección" value={form.address} onChange={(e) => setForm((f) => ({ ...f, address: e.currentTarget.value }))} />
+          <TextInput label="Teléfono" value={form.phone} onChange={(e) => setForm((f) => ({ ...f, phone: e.target.value }))} />
+          <TextInput label="Dirección" value={form.address} onChange={(e) => setForm((f) => ({ ...f, address: e.target.value }))} />
         </SimpleGrid>
 
         <Title order={4} mt="lg" mb="sm">Redes Sociales</Title>
         <SimpleGrid cols={{ base: 1, md: 2 }} mb="md">
-          <TextInput label="Instagram" placeholder="https://instagram.com/..." value={form.instagram} onChange={(e) => setForm((f) => ({ ...f, instagram: e.currentTarget.value }))} />
-          <TextInput label="Facebook" placeholder="https://facebook.com/..." value={form.facebook} onChange={(e) => setForm((f) => ({ ...f, facebook: e.currentTarget.value }))} />
-          <TextInput label="WhatsApp" placeholder="https://wa.me/..." value={form.whatsapp} onChange={(e) => setForm((f) => ({ ...f, whatsapp: e.currentTarget.value }))} />
-          <TextInput label="TikTok" placeholder="https://tiktok.com/@..." value={form.tiktok} onChange={(e) => setForm((f) => ({ ...f, tiktok: e.currentTarget.value }))} />
+          <TextInput label="Instagram" placeholder="https://instagram.com/..." value={form.instagram} onChange={(e) => setForm((f) => ({ ...f, instagram: e.target.value }))} />
+          <TextInput label="Facebook" placeholder="https://facebook.com/..." value={form.facebook} onChange={(e) => setForm((f) => ({ ...f, facebook: e.target.value }))} />
+          <TextInput label="WhatsApp" placeholder="https://wa.me/..." value={form.whatsapp} onChange={(e) => setForm((f) => ({ ...f, whatsapp: e.target.value }))} />
+          <TextInput label="TikTok" placeholder="https://tiktok.com/@..." value={form.tiktok} onChange={(e) => setForm((f) => ({ ...f, tiktok: e.target.value }))} />
         </SimpleGrid>
 
         <Group mt="xl" justify="flex-end">

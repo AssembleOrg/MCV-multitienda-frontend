@@ -4,14 +4,16 @@ import { usePathname } from "next/navigation";
 import Link from "next/link";
 import {
   AppShell,
-  NavLink,
   Burger,
   Group,
   Text,
   Loader,
   Center,
+  Avatar,
+  UnstyledButton,
+  Box,
 } from "@mantine/core";
-import { useDisclosure } from "@mantine/hooks";
+import { useDisclosure, useMediaQuery } from "@mantine/hooks";
 import {
   IconDashboard,
   IconPackage,
@@ -46,10 +48,9 @@ export default function AdminLayout({
   const pathname = usePathname();
   const user = useAuthStore((s) => s.user);
   const loading = useAuthStore((s) => s.loading);
-  const [opened, { toggle }] = useDisclosure();
+  const [opened, { toggle, close }] = useDisclosure();
+  const isDesktop = useMediaQuery("(min-width: 48em)");
 
-  // Middleware already redirects unauthenticated users.
-  // This is just a loading state while AuthProvider hydrates.
   if (loading) {
     return (
       <Center py={100}>
@@ -58,7 +59,6 @@ export default function AdminLayout({
     );
   }
 
-  // Extra client-side guard for non-admin users
   if (!user || user.role !== "admin") {
     return (
       <Center py={100}>
@@ -67,64 +67,119 @@ export default function AdminLayout({
     );
   }
 
+  const initials = user.name
+    ? user.name.split(" ").map((n: string) => n[0]).join("").slice(0, 2).toUpperCase()
+    : "A";
+
   return (
     <AppShell
-      header={{ height: 60 }}
+      header={{ height: 52 }}
       navbar={{
-        width: 260,
+        width: 220,
         breakpoint: "sm",
         collapsed: { mobile: !opened },
       }}
       padding="md"
+      styles={{
+        main: { background: "#F5F5F7" },
+        navbar: {
+          background: "#FFFFFF",
+          borderRight: "1px solid #E5E5E5",
+        },
+        header: {
+          background: "#FFFFFF",
+          borderBottom: "1px solid #E5E5E5",
+        },
+      }}
     >
-      <AppShell.Header className="border-b border-gray-200">
+      {/* Header */}
+      <AppShell.Header>
         <Group h="100%" px="md" justify="space-between">
-          <Group>
-            <Burger
-              opened={opened}
-              onClick={toggle}
-              hiddenFrom="sm"
-              size="sm"
-            />
-            <Text fw={700} size="lg" c="#C41E3A">
+          <Group gap="xs">
+            <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" color="#555" />
+            <Text fw={600} size="sm" c="#C41E3A" style={{ letterSpacing: "-0.01em" }}>
               MCV Admin
             </Text>
           </Group>
-          <Group>
-            <Text size="sm" c="dimmed">
-              {user.name}
-            </Text>
+          <Group gap="md">
             <Link
               href="/"
-              className="flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700"
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 4,
+                fontSize: 12,
+                color: "#888",
+                textDecoration: "none",
+              }}
             >
-              <IconArrowLeft size={16} />
+              <IconArrowLeft size={13} />
               Volver al sitio
             </Link>
+            <Group gap={8}>
+              <Avatar size={28} radius="xl" color="red" style={{ background: "#C41E3A" }}>
+                <Text size="xs" fw={700} c="white">{initials}</Text>
+              </Avatar>
+              <Text size="xs" c="#555" visibleFrom="sm">{user.name}</Text>
+            </Group>
           </Group>
         </Group>
       </AppShell.Header>
 
-      <AppShell.Navbar p="md">
-        {adminLinks.map((link) => (
-          <NavLink
-            key={link.href}
-            component={Link}
-            href={link.href}
-            label={link.label}
-            leftSection={<link.icon size={18} />}
-            active={
+      {/* Sidebar */}
+      <AppShell.Navbar p={0}>
+        <Box py={8}>
+          {adminLinks.map((link) => {
+            const isActive =
               link.href === "/admin"
                 ? pathname === "/admin"
-                : pathname.startsWith(link.href)
-            }
-            color="red"
-            variant="light"
-          />
-        ))}
+                : pathname.startsWith(link.href);
+
+            return (
+              <UnstyledButton
+                key={link.href}
+                component={Link}
+                href={link.href}
+                onClick={() => { if (!isDesktop) close(); }}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 10,
+                  width: "100%",
+                  padding: isDesktop ? "8px 16px" : "13px 16px",
+                  borderRadius: 0,
+                  fontSize: 13,
+                  fontWeight: isActive ? 600 : 500,
+                  color: isActive ? "#C41E3A" : "#444",
+                  background: isActive ? "#FFF0F2" : "transparent",
+                  borderLeft: isActive ? "3px solid #C41E3A" : "3px solid transparent",
+                  transition: "background 150ms, color 150ms",
+                  textDecoration: "none",
+                }}
+                onMouseEnter={(e) => {
+                  if (!isActive) {
+                    (e.currentTarget as HTMLElement).style.background = "#F5F5F7";
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (!isActive) {
+                    (e.currentTarget as HTMLElement).style.background = "transparent";
+                  }
+                }}
+              >
+                <link.icon
+                  size={17}
+                  color={isActive ? "#C41E3A" : "#777"}
+                  stroke={isActive ? 2 : 1.5}
+                />
+                {link.label}
+              </UnstyledButton>
+            );
+          })}
+        </Box>
       </AppShell.Navbar>
 
-      <AppShell.Main className="bg-gray-50">{children}</AppShell.Main>
+      <AppShell.Main>{children}</AppShell.Main>
     </AppShell>
   );
 }

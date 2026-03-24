@@ -32,7 +32,7 @@ export default function NosotrosPage() {
   return (
     <section className="bg-white">
       {/* Hero */}
-      <div className="relative bg-[#1a1a1a] py-20">
+      <div className="relative overflow-hidden bg-[#1a1a1a] py-20">
         <Container size="lg" className="text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -49,7 +49,7 @@ export default function NosotrosPage() {
             <Title order={1} className="mb-4 text-3xl font-bold text-white">
               Sobre Nosotros
             </Title>
-            <Text c="gray.4" size="lg" maw={600} className="mx-auto">
+            <Text c="gray.4" size="lg" maw={600} mx="auto" ta="center">
               Somos MCV Multitienda, tu tienda online de confianza. Ofrecemos
               los mejores productos en ropa, moda, celulares y electrónica con
               la mejor atención y los mejores precios.
@@ -61,7 +61,7 @@ export default function NosotrosPage() {
 
       {/* Features */}
       <Container size="lg" className="py-16">
-        <Title order={2} className="mb-10 text-center text-2xl font-bold text-gray-800">
+        <Title order={2} className="mb-8 text-center text-2xl font-bold text-gray-800">
           ¿Por qué elegirnos?
         </Title>
         <SimpleGrid cols={{ base: 1, sm: 2, md: 4 }} spacing="xl">
@@ -88,12 +88,12 @@ export default function NosotrosPage() {
       </Container>
 
       {/* Mission */}
-      <div className="bg-gray-50 py-16">
-        <Container size="md" className="text-center">
+      <div className="bg-gray-50 py-20">
+        <Container size="lg" className="text-center">
           <Title order={2} className="mb-6 text-2xl font-bold text-gray-800">
             Nuestra Misión
           </Title>
-          <Text size="lg" c="dimmed" className="leading-relaxed">
+          <Text size="lg" c="dimmed" className="leading-relaxed" maw={640} mx="auto">
             Brindar a nuestros clientes una experiencia de compra única,
             ofreciendo productos de calidad a precios accesibles. Nos
             comprometemos a la excelencia en el servicio, la innovación
